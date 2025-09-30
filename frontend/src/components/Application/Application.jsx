@@ -3,6 +3,9 @@ import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import { Context } from "../../main";
+
+const API_URL = import.meta.env.VITE_API_URL;
+
 const Application = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -35,7 +38,7 @@ const Application = () => {
 
     try {
       const { data } = await axios.post(
-        "http://localhost:4000/api/v1/application/post",
+        `${API_URL}/api/v1/application/post`,
         formData,
         {
           withCredentials: true,
