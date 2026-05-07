@@ -29,8 +29,13 @@ export const errorMiddleware = (err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   // Avoid leaking sensitive details (e.g. connection strings) to the client.
   const isProduction = process.env.NODE_ENV === "production";
-  const isSafeServerErrorMessage =
-    err.message === "MongoDB URI is not defined (missing `MONGO_URI`).";
+  const safeServerErrorMessages = new Set([
+    "MongoDB URI is not defined (missing `MONGO_URI`).",
+    "JWT_SECRET_KEY is not defined.",
+    "COOKIE_EXPIRE is not defined.",
+    "COOKIE_EXPIRE must be a number.",
+  ]);
+  const isSafeServerErrorMessage = safeServerErrorMessages.has(err.message);
 
   const messageToSend =
     isProduction && statusCode === 500 && !isSafeServerErrorMessage
