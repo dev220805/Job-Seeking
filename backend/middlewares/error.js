@@ -46,6 +46,10 @@ export const errorMiddleware = (err, req, res, next) => {
     // Log the full error server-side for debugging.
     console.error(err);
   }
+  if (isProduction && statusCode === 500 && isSafeServerErrorMessage) {
+    // Still log safe messages so Vercel logs show what's missing.
+    console.error(err);
+  }
 
   return res.status(statusCode).json({
     success: false,
